@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Breach</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+                text-shadow: -2px 0 #0f0, 2px 2px #f00;
+            }
+            25% {
+                transform: translate(-2px, 2px);
+                text-shadow: 2px -2px #0f0, -2px -2px #f00;
+            }
+            50% {
+                transform: translate(2px, -2px);
+                text-shadow: 2px 0 #0f0, -2px 2px #f00;
+            }
+            75% {
+                transform: translate(-2px, 2px);
+                text-shadow: -2px -2px #0f0, 2px -2px #f00;
+            }
+            100% {
+                transform: translate(0);
+                text-shadow: -2px 0 #0f0, 2px 2px #f00;
+            }
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem 1rem;
+            border-bottom: 2px solid #0f0;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .main-header {
+            font-size: clamp(2rem, 8vw, 5rem);
+            text-align: center;
+            animation: glitch 3s infinite;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin: 0;
+            padding: 1rem;
+            color: #0f0;
+            text-shadow: 0 0 10px #0f0;
+        }
+
+        .sub-header {
+            font-size: clamp(1rem, 4vw, 2rem);
+            text-align: center;
+            color: #ff0000;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            animation: blink 1s infinite;
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            animation: scanline 4s linear infinite;
+        }
+        
+        .terminal {
+            background-color: rgba(0, 20, 0, 0.9);
+            border: 2px solid #0f0;
+            padding: 20px;
+            height: 50vh;
+            overflow-y: auto;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            word-wrap: break-word;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .progress {
+            height: clamp(20px, 4vw, 25px);
+            background-color: #000;
+            border: 2px solid #0f0;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+        
+        .progress-bar {
+            background-color: #0f0;
+            color: #000;
+            font-weight: bold;
+            font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+            text-shadow: none;
+        }
+        
+        .status {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin: 20px 0;
+            text-align: center;
+            text-shadow: 0 0 5px #0f0;
+        }
+        
+        .warning {
+            color: #ff0;
+            text-shadow: 0 0 5px #ff0;
+        }
+        
+        .danger {
+            color: #f00;
+            text-shadow: 0 0 5px #f00;
+        }
+        
+        .success {
+            color: #0f0;
+            text-shadow: 0 0 5px #0f0;
+        }
+
+        .btn {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            padding: clamp(0.5rem, 2vw, 1rem);
+            white-space: normal;
+            height: auto;
+            min-height: 44px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-width: 2px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-outline-success {
+            border-color: #0f0;
+            color: #0f0;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .btn-outline-danger {
+            border-color: #f00;
+            color: #f00;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #f00;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .header-container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .terminal {
+                height: 40vh;
+                padding: 10px;
+            }
+            
+            .status {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="matrix-bg" id="matrix"></canvas>
+    
+    <div class="header-container">
+        <div class="scanline"></div>
+        <h1 class="main-header">System Breach</h1>
+        <p class="sub-header">Your Device Has Been Compromised</p>
+        <div class="scanline"></div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="terminal" id="terminal"></div>
+                <div class="status" id="status">Initializing breach protocol...</div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" id="progress" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-success" id="startHack">Initialize System Breach</button>
+                    <button class="btn btn-outline-danger" id="stopHack" style="display: none;">Emergency Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Matrix rain effect with responsive canvas
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = Math.max(10, Math.floor(window.innerWidth / 50));
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 50);
+
+        // Hacking simulation
+        const terminal = document.getElementById('terminal');
+        const status = document.getElementById('status');
+        const progress = document.getElementById('progress');
+        const startBtn = document.getElementById('startHack');
+        const stopBtn = document.getElementById('stopHack');
+
+        const hackingMessages = [
+            "Initiating system breach...",
+            "Bypassing security protocols...",
+            "Accessing main database...",
+            "Extracting system files...",
+            "Corrupting firewall...",
+            "Deploying malicious payload...",
+            "Establishing backdoor access...",
+            "Downloading sensitive data...",
+            "Encrypting local files...",
+            "Installing persistent access...",
+            "Covering digital footprints...",
+            "Breach successful..."
+        ];
+
+        let hackingInterval;
+        let progressValue = 0;
+
+        function addMessage(message, type = 'success') {
+            const div = document.createElement('div');
+            div.textContent = `> ${message}`;
+            div.className = type;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function updateProgress() {
+            progressValue += Math.random() * 5;
+            if (progressValue > 100) progressValue = 100;
+            progress.style.width = progressValue + '%';
+            progress.textContent = Math.round(progressValue) + '%';
+        }
+
+        function startHack() {
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
+            progressValue = 0;
+            terminal.innerHTML = '';
+            addMessage('BREACH PROTOCOL INITIATED', 'warning');
+            
+            let messageIndex = 0;
+            hackingInterval = setInterval(() => {
+                if (messageIndex < hackingMessages.length) {
+                    addMessage(hackingMessages[messageIndex]);
+                    messageIndex++;
+                    updateProgress();
+                    status.textContent = 'System breach in progress...';
+                } else if (progressValue >= 100) {
+                    clearInterval(hackingInterval);
+                    addMessage('SYSTEM SUCCESSFULLY COMPROMISED', 'danger');
+                    status.textContent = 'System compromised';
+                    stopBtn.style.display = 'none';
+                    startBtn.style.display = 'block';
+                }
+            }, 1500);
+        }
+
+        function stopHack() {
+            clearInterval(hackingInterval);
+            addMessage('BREACH PROTOCOL TERMINATED', 'warning');
+            status.textContent = 'System breach terminated';
+            stopBtn.style.display = 'none';
+            startBtn.style.display = 'block';
+        }
+
+        startBtn.addEventListener('click', startHack);
+        stopBtn.addEventListener('click', stopHack);
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                resizeCanvas();
+                const fontSize = Math.max(10, Math.floor(window.innerWidth / 50));
+                const columns = canvas.width / fontSize;
+                drops.length = Math.floor(columns);
+                drops.fill(1);
+            }, 250);
+        });
+    </script>
+</body>
+</html>
